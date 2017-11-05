@@ -36,6 +36,7 @@ go run hibpnotify.go -config path/to/config.json
 
 ### Currently WIP
 - using Google Apps as data source
+- allow one time checks instead of long running service
 
 ### Planned
 - Active Directory support
