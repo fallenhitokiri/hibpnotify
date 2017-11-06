@@ -27,7 +27,7 @@ func (n *notificationEmail) notify(accounts []string) error {
 
 func (n *notificationEmail) byEmail(accounts []string) error {
 	auth := smtp.PlainAuth("", n.config.NotifySMTPUser, n.config.NotifySMTPPassword, n.config.NotifySMTPHost)
-	body, err := n.toEmailBody(accounts)
+	message, err := n.message(accounts)
 
 	if err != nil {
 		return err
@@ -38,16 +38,18 @@ func (n *notificationEmail) byEmail(accounts []string) error {
 		auth,
 		n.config.NotifySMTPFrom,
 		[]string{n.config.NotifyEmail},
-		[]byte(body),
+		[]byte(message),
 	)
 }
 
-func (n *notificationEmail) toEmailBody(accounts []string) (string, error) {
+func (n *notificationEmail) message(accounts []string) (string, error) {
 	body := "Newly breached accounts:\n\n"
 
 	for _, s := range accounts {
 		body = body + s + "\n"
 	}
 
-	return body, nil
+	msg := "To: " + n.config.NotifyEmail + "\r\nSubject: Account breached!\r\n\r\n" + body + "\r\n"
+
+	return msg, nil
 }
