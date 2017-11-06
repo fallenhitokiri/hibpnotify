@@ -2,10 +2,11 @@
 This little tool accepts a CSV file with email addresses as input and regularly checks
 [https://haveibeenpwned.com](https://haveibeenpwned.com) if they were compromised in a data
 breach. If it detects a newly breached account it will send a short info mail to the breached
-account and a third, freely configurable email address. Knowing an account was breached allows
-to put some special logging for this account in place. Maybe forcing a password change in case
-a password was reused. Or simply as an information for people who were victim of a breach in
-your organisation so they know and can react.
+account and a third, freely configurable email address. It will also allow you to trigger
+account related actions for certain providers like Google Apps. Knowing an account was breached
+allows to put some special logging for this account in place. Maybe forcing a password change
+in case a password was reused. Or simply as an information for people who were victim of a
+breach in your organisation so they know and can react.
 
 ## Installation and configuration
 With the first official release there will be binaries for at least Linux and macOS, right now
@@ -35,13 +36,14 @@ go run hibpnotify.go -config path/to/config.json
 - email notifications
 
 ### Currently WIP
-- using Google Apps as data source
+- using Google Apps as data source and locking / forcing password changes on breach detection
 - allow one time checks instead of long running service
 
 ### Planned
 - Active Directory support
 - Slack notifications
 - web interface for users to submit their private email addresses
+- Okta integration
 
 ## License
 MIT 
