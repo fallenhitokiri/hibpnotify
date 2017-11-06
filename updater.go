@@ -15,8 +15,8 @@ type updater struct {
 	dataSources  []dataSource
 	newBreached  []string
 
-	sleepTime     time.Duration
-	frequencyTime time.Duration
+	requestRateLimit time.Duration
+	frequencyTime    time.Duration
 }
 
 func newUpdater(c *config, n []notification, ds []dataSource, hibp hibpClient) (*updater, error) {
@@ -27,13 +27,13 @@ func newUpdater(c *config, n []notification, ds []dataSource, hibp hibpClient) (
 	}
 
 	up := &updater{
-		config:        c,
-		db:            db,
-		hibp:          hibp,
-		notification:  n,
-		dataSources:   ds,
-		sleepTime:     time.Duration(c.CheckRequestTimeout) * time.Second,
-		frequencyTime: time.Duration(c.CheckIntervalInSeconds) * time.Second,
+		config:           c,
+		db:               db,
+		hibp:             hibp,
+		notification:     n,
+		dataSources:      ds,
+		requestRateLimit: 3 * time.Second, // wait 3 seconds between requests to the HIBP API
+		frequencyTime:    time.Duration(c.CheckIntervalInSeconds) * time.Second,
 	}
 	return up, nil
 }
@@ -84,7 +84,7 @@ func (u *updater) handleSource(source dataSource) error {
 			}
 		}
 
-		time.Sleep(u.sleepTime)
+		time.Sleep(u.requestRateLimit)
 	}
 
 	return nil

@@ -15,7 +15,6 @@ type config struct {
 	DatabaseArgs    string
 
 	CheckIntervalInSeconds int // frequency in which to check for new breaches (min: 3600 s== 1 hour)
-	CheckRequestTimeout    int // time between requests to the HIBP API
 
 	NotifyEmail        string // email address to send notifications about newly detected breaches to
 	NotifySMTPHost     string
@@ -42,9 +41,20 @@ func NewConfig(path string) (*config, error) {
 }
 
 func InitConfig(path string) error {
-	c := &config{}
+	c := &config{
+		CheckIntervalInSeconds: 3600 * 12, // default: every 12 hours
+		DatabaseDialect:        "sqlite3",
+		DatabaseArgs:           "hibpnotify.sqlite3",
+		CSVPath:                "emails.csv",
+		NotifyEmail:            "ops@company.tld",
+		NotifySMTPHost:         "mail.company.tld",
+		NotifySMTPAddr:         "mail.company.tld:587",
+		NotifySMTPUser:         "smptuser",
+		NotifySMTPPassword:     "smtppass",
+		NotifySMTPFrom:         "youHaveBeenPwnd@company.tld",
+	}
 
-	data, err := json.Marshal(c)
+	data, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		return err
 	}
